@@ -7,19 +7,27 @@ import android.view.SurfaceView;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
 import org.opencv.android.LoaderCallbackInterface;
 import org.opencv.android.OpenCVLoader;
+import org.opencv.core.Core;
 import org.opencv.core.CvType;
 import org.opencv.core.Mat;
+import org.opencv.core.Scalar;
+import org.opencv.core.Size;
 import org.opencv.imgproc.Imgproc;
+
+import static org.opencv.core.Core.mean;
 
 public class MainActivity extends AppCompatActivity implements CameraBridgeViewBase.CvCameraViewListener2 {
     private CameraBridgeViewBase mOpenCvCameraView;
     private Mat mIntermediateMat;
     private Mat mRgba;
+
+    private TextView tvInfoBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -27,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
         super.onCreate(savedInstanceState);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         setContentView(R.layout.activity_main);
+
+        tvInfoBox = (TextView) findViewById(R.id.InfoBox);
+        tvInfoBox.setText("Startup");
+
         mOpenCvCameraView = (CameraBridgeViewBase) findViewById(R.id.HelloOpenCvView);
         try {
             mOpenCvCameraView.setVisibility(SurfaceView.VISIBLE);
@@ -63,7 +75,26 @@ public class MainActivity extends AppCompatActivity implements CameraBridgeViewB
 
     public Mat onCameraFrame(CameraBridgeViewBase.CvCameraViewFrame inputFrame) {
         Imgproc.Canny(inputFrame.gray(), mIntermediateMat, 80, 100);
+
+        /*double Mean = 0;
+        for (int r=0; r<mIntermediateMat.rows(); r++) {
+            for (int c=0; c<mIntermediateMat.cols(); c++) {
+                //Mean += mIntermediateMat.get(r, c)[0];
+            }
+        }*/
+
+        final Scalar Mean = mean(mIntermediateMat);
+        Log.i("Mean", Mean.toString());
+
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                tvInfoBox.setText("Mean" + Mean.toString());
+            }
+        });
+
         Imgproc.cvtColor(mIntermediateMat, mRgba, Imgproc.COLOR_GRAY2RGBA, 4);
+
         return mRgba;
     }
 
