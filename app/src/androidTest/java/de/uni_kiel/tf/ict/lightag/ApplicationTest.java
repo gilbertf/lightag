@@ -1,4 +1,4 @@
-package de.uni_kiel.tf.ict.lighttag;
+package de.uni_kiel.tf.ict.lightag;
 
 import android.app.Application;
 import android.test.ApplicationTestCase;

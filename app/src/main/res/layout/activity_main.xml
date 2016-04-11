@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="de.uni_kiel.tf.ict.lighttag.MainActivity">
+    tools:context="de.uni_kiel.tf.ict.lightag.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
